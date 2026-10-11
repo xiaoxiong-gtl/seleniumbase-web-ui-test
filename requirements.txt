@@ -1,0 +1,8 @@
+# Web UI 自动化测试框架依赖（Python 3.14 实测可用）
+# 安装： .venv-test/Scripts/python.exe -m pip install -r requirements.txt
+seleniumbase==4.55.2      # 对 Selenium + pytest 的工程化封装，本项目框架基础
+selenium==4.50.0          # 底层 WebDriver（SeleniumBase 的依赖，此处锁定版本）
+pytest==9.1.1             # 用例组织与运行
+pytest-html==4.0.2        # 生成可视化 HTML 报告
+pytest-xdist==3.8.0       # 多进程并行执行，缩短回归时间
+pytest-rerunfailures==16.7  # 失败用例自动重跑，缓解偶发失败（flaky）

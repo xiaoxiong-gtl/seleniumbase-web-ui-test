@@ -1,0 +1,20 @@
+# 虚拟环境
+.venv-test/
+venv/
+.venv/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# 测试产物
+reports/
+latest_logs/
+assets/
+downloaded_files/
+*.png
+
+# IDE
+.idea/
+.vscode/
