@@ -86,7 +86,11 @@ python -m venv .venv-test
 ## 测试结果
 
 ```
+# 串行
 16 passed in 75.40s
+
+# 四进程并行（pytest-xdist）
+16 passed in 23.19s
 ```
 
 | 模块 | 用例数 | 覆盖内容 |
