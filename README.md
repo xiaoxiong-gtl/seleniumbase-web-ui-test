@@ -87,11 +87,14 @@ python -m venv .venv-test
 
 ```
 # 串行
-16 passed in 75.40s
+15 passed in 73.80s
 
-# 四进程并行（pytest-xdist）
-16 passed in 23.19s
+# 四进程并行（pytest-xdist -n 4）
+15 passed in 24.32s
 ```
+
+> 并行加速比约 **3.0×**（73.80s → 24.32s）。瓶颈主要在浏览器启动开销，
+> 因此用例规模越大，并行的收益越明显；4 进程是本机的收益拐点，再往上加收益递减。
 
 | 模块 | 用例数 | 覆盖内容 |
 |---|---|---|
@@ -100,8 +103,25 @@ python -m venv .venv-test
 | test_cart.py | 2 | 商品带入购物车；移除商品 |
 | test_checkout.py | 4 | 端到端下单链路；收货信息三类必填校验（参数化） |
 
+## 持续集成（每日定时回归）
+
+已接入两套 CI，步骤等价，任选其一即可：
+
+| 方案 | 配置文件 | 触发方式 | 说明 |
+|---|---|---|---|
+| GitHub Actions | `.github/workflows/regression.yml` | 每日 09:17（北京）/ push / PR / 手动 | 真跑，构建结果在仓库 Actions 页可见 |
+| Jenkins | `Jenkinsfile` | 每日 `H 1 * * *` | 声明式流水线，报告展示依赖 HTML Publisher 插件 |
+
+流水线步骤：**检出代码 → 安装依赖 → 确认浏览器 → Chrome 无头 + 4 进程并行执行 → 上传测试报告与失败截图**。
+
+> 注意：`pytest.ini` 中为本地环境写死了 `--browser=edge`，而 CI 节点通常只有 Chrome。
+> 因此 CI 命令用 `-o 'addopts='` 清空该配置，再显式指定 `--browser=chrome`，
+> 避免"命令行参数没覆盖 inifile 参数"这类隐蔽问题。
+
+失败通知：GitHub Actions 的定时任务失败时，会自动向仓库所有者发送邮件。
+
 ## 后续可扩展
 
 - 接入 Allure 报告，展示每一步操作与断言详情
-- 接入 Jenkins / GitHub Actions 实现每日定时回归，失败自动通知
-- 补充 Chrome / Edge 多浏览器矩阵测试
+- 引入 Chrome / Edge 多浏览器矩阵（`strategy.matrix`），横向扩大多环境覆盖
+- 增加用例覆盖率统计，量化接口与页面的覆盖情况
