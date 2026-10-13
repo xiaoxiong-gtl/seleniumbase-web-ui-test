@@ -53,7 +53,7 @@ python -m venv .venv-test
 .venv-test/Scripts/python.exe -m pytest practice/ --headless -n 4
 ```
 
-> 默认浏览器在 `pytest.ini` 中配置为 Edge；装了 Chrome 改成 `--browser=chrome` 即可。
+
 
 ## 设计要点
 
@@ -114,9 +114,6 @@ python -m venv .venv-test
 
 流水线步骤：**检出代码 → 安装依赖 → 确认浏览器 → Chrome 无头 + 4 进程并行执行 → 上传测试报告与失败截图**。
 
-> 注意：`pytest.ini` 中为本地环境写死了 `--browser=edge`，而 CI 节点通常只有 Chrome。
-> 因此 CI 命令用 `-o 'addopts='` 清空该配置，再显式指定 `--browser=chrome`，
-> 避免"命令行参数没覆盖 inifile 参数"这类隐蔽问题。
 
 失败通知：GitHub Actions 的定时任务失败时，会自动向仓库所有者发送邮件。
 
